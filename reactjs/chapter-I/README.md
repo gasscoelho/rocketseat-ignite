@@ -5,5 +5,4 @@ This chapter focus on the React fundamentals. It covers important concepts like 
 ## Challenges
 
 - [React Concepts](https://github.com/gasscoelho/ignite-challenge-react-concepts)
-
 - [Componentizing the Application](https://github.com/gasscoelho/ignite-challenge-componentizing-the-application)

@@ -116,7 +116,7 @@ To test the babel, let's create a `src` folder and then, the `index.js` file.
 
 ```js
 const user = {
-	name: 'Gabriel Coelho'
+  name: 'Gabriel Coelho'
 }
 
 console.log(user.address?.street)
@@ -187,23 +187,23 @@ Similar with Babel, let's create a configuration file for the Webpack:
 const path = require('path')
 
 module.exports = {
-	entry: path.resolve(__dirname, 'src', 'index.jsx'),
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'bundle.js'
-	},
-	resolve: {
-		extensions: ['.js', '.jsx']
-	},
-	module: {
-		rules: [
-			{
-				test: /\.jsx$/,
-				exclude: /node_modules/,
-				use: 'babel-loader'
-			}
-		]
-	}
+  entry: path.resolve(__dirname, 'src', 'index.jsx'),
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
+  module: { 
+    rules: [
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        use: 'babel-loader'
+      }
+    ]
+  }
 }
 ``` 
 
@@ -323,28 +323,28 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   mode: 'development',
-	entry: path.resolve(__dirname, 'src', 'index.jsx'),
-	output: {
-		path: path.resolve(__dirname, 'dist'),
-		filename: 'bundle.js'
-	},
-	resolve: {
-		extensions: ['.js', '.jsx']
-	},
+  entry: path.resolve(__dirname, 'src', 'index.jsx'),
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, 'public', 'index.html')
     })
   ],
-	module: {
-		rules: [
-			{
-				test: /\.jsx$/,
-				exclude: /node_modules/,
-				use: 'babel-loader'
-			}
-		]
-	}
+  module: {
+    rules: [
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        use: 'babel-loader'
+      }
+    ]
+  }
 }
 ```
 
@@ -371,9 +371,9 @@ In short, this dependency will watch our code and every time we make a change, i
 module.exports = {
   mode: 'development',
   ...
-	resolve: {
-		extensions: ['.js', '.jsx']
-	},
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
   devServer: {
     contentBase: path.resolve(__dirname, 'public')
   },
@@ -416,7 +416,7 @@ This can make debugging harder. So, to avoid that and to enable the **source map
 module.exports = {
   mode: 'development',
   devtool: 'eval-source-map',
-	entry: path.resolve(__dirname, 'src', 'index.jsx'),
+  entry: path.resolve(__dirname, 'src', 'index.jsx'),
   ...
 }
 ```

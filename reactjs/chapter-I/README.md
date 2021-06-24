@@ -804,7 +804,7 @@ module.exports = {
 
 ## HTTP Calls
 
-### Styling the Lsit
+### Styling the List
 
 Create a `repositories.scss` file:
 

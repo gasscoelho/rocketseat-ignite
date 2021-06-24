@@ -629,6 +629,8 @@ export function App() {
 }
 ```
 
+**[⬆ back to top](#table-of-contents)**
+
 ### Properties
 
 Properties in React works in the same way as the attributes in HTML Tags. They are variables that we pass to the component to change its behavior. In short, the parent components pass information to the children components.
@@ -685,6 +687,8 @@ export function RepositoryList() {
 
 > Note that in this example we are creating objects for each repository and passing them to the child component.
 
+**[⬆ back to top](#table-of-contents)**
+
 ### State
 
 The state is a really important concept in React that enables us to change a value of a variable and automatically render it on the screen if needed. In short, the state of a component is an object that holds information that may change over the lifetime of the component.
@@ -714,6 +718,8 @@ export function Counter() {
 
 > Note that the example above is just a demonstration of how to use the `useState` hook. We don't need to create it in the application.
 
+**[⬆ back to top](#table-of-contents)**
+
 ### Immutability
 
 In programming, a variable is immutable when its value cannot change after it’s created. An immutable variable can never be changed. To update its value, you create a new variable.
@@ -724,6 +730,8 @@ There are various reasons, the most important of which are:
 
 * Code looks cleaner and simpler to understand. You never expect a function to change some value without you knowing, which gives you predictability. When a function does not mutate objects but just returns a new object, it’s called a pure function.
 * The library can optimize the code because for example JavaScript is faster when swapping an old object reference for an entirely new object, rather than mutating an existing object. This gives you performance.
+
+**[⬆ back to top](#table-of-contents)**
 
 ### Fast Refresh in Webpack
 

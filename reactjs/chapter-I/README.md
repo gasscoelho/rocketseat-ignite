@@ -571,6 +571,219 @@ module: {
 
 ## Important Concepts
 
+### Components
+
+Components in React are like Tags in HTML. It's a way to encapsulate the code inside of a single element that will contain its own style and features.
+
+Some conventions when developing components:
+
+* Each component per file
+* Always start with an uppercase letter
+* It's a good practice to create a `components` folder to stores all the components of the application
+
+In our application, create a folder `src/components/` and a file named `RepositoryList.jsx`.
+
+**./src/components/RepositoryList.jsx**
+
+```js
+export function RepositoryList() {
+  return (
+    <section className="repository-list">
+      <h1>Repositories List</h1>
+
+      <ul>
+        <li>
+          <strong>Repository Name</strong>
+          <p>Repository Description</p>
+
+          <a href="http://">Access</a>
+        </li>
+
+        <li>
+          <strong>Repository Name</strong>
+          <p>Repository Description</p>
+
+          <a href="http://">Access</a>
+        </li>
+      </ul>
+    </section>
+  )
+}
+```
+
+Once created, we can add it to the `App.jsx`:
+
+**./src/App.jsx**
+
+```js
+import { RepositoryList } from './components/RepositoryList';
+import './styles/global.scss';
+
+export function App() {
+  return <RepositoryList />
+}
+```
+
+### Properties
+
+Properties in React works in the same way as the attributes in HTML Tags. They are variables that we pass to the component to change its behavior. In short, the parent components pass information to the children components.
+
+Let's create another component called `RepositoryItem.jsx`:
+
+**./src/components/RepositoryItem.jsx**
+
+```js
+export function RepositoryItem(props) {
+  return (
+    <li>
+      <strong>{props.repository.name}</strong>
+      <p>{props.repository.description}</p>
+
+      <a href={props.repository.link}>Access</a>
+    </li>
+  );
+}
+```
+
+Once done, go back to the `RepositoryList` and change the `<li>` blocks to use the new component:
+
+**./src/components/RepositoryList.jsx**
+
+```js
+import { RepositoryItem } from "./RepositoryItem"
+
+const dbtRepository = {
+  name: 'dbt',
+  description: 'A transformation tool.', 
+  link: 'https://github.com/'
+}
+
+const jenkinsRepository = {
+  name: 'Jenkins',
+  description: 'Implement a CI/CD with Jenkins.', 
+  link: 'https://github.com/'
+}
+
+export function RepositoryList() {
+  return (
+    <section className="repository-list">
+      <h1>Repositories List</h1>
+
+      <ul>
+        <RepositoryItem repository={dbtRepository} />
+        <RepositoryItem repository={jenkinsRepository}/>
+      </ul>
+    </section>
+  )
+}
+```
+
+> Note that in this example we are creating objects for each repository and passing them to the child component.
+
+### State
+
+The state is a really important concept in React that enables us to change a value of a variable and automatically render it on the screen if needed. In short, the state of a component is an object that holds information that may change over the lifetime of the component.
+
+In react, we use the `useState` hook. This hook receives a value to initialize the variable. It returns an array where the first index is the "variable" and the second index is a function used to update the value of this variable. For example:
+
+```js
+import { useState } from 'react'
+
+export function Counter() {
+  const [counter, setCounter] = useState(0)
+
+  function increment() {
+    setCounter(counter + 1)
+  }
+
+  return (
+    <div>
+      <h1>{counter}</h1>
+      <button type="button" onClick={increment}>
+        Increment
+      </button>
+    </div>
+  )
+}
+```
+
+> Note that the example above is just a demonstration of how to use the `useState` hook. We don't need to create it in the application.
+
+### Immutability
+
+In programming, a variable is immutable when its value cannot change after it’s created. An immutable variable can never be changed. To update its value, you create a new variable.
+
+In React this applies in many places, specially for states.
+
+There are various reasons, the most important of which are:
+
+* Code looks cleaner and simpler to understand. You never expect a function to change some value without you knowing, which gives you predictability. When a function does not mutate objects but just returns a new object, it’s called a pure function.
+* The library can optimize the code because for example JavaScript is faster when swapping an old object reference for an entirely new object, rather than mutating an existing object. This gives you performance.
+
+### Fast Refresh in Webpack
+
+This dependency is used when we want to refresh the screen without resetting the state of our variables. For instance, a really common issue is that when we add/change the code that and it triggers the load of the screen, all of our `useState` gets restarted. So, if we want to avoid that, we need to use this dependency.
+
+```zsh
+yarn add -D @pmmmwh/react-refresh-webpack-plugin react-refresh
+```
+
+Go to `webpack.config.js` and add the new plugin:
+
+**./webpack.config.js**
+
+```js
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
+module.exports = {
+  mode: isDevelopment ? 'development' : 'production',
+  devtool: isDevelopment ? 'eval-source-map' : 'source-map',
+  entry: path.resolve(__dirname, 'src', 'index.jsx'),
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, 'public'),
+    hot: true
+  },
+  plugins: [
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, 'public', 'index.html')
+    })
+  ].filter(Boolean),
+  module: {
+    rules: [
+      {
+        test: /\.jsx$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+              isDevelopment && require.resolve('react-refresh/babel')
+            ].filter(Boolean)
+          }
+        }
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      },
+    ]
+  }
+}
+```
+
 **[⬆ back to top](#table-of-contents)**
 
 ## HTTP Calls

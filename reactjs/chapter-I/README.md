@@ -23,6 +23,9 @@ This chapter focus on the React fundamentals. It covers important concepts like 
    4. [Immutability](#immutability)
    5. [Fast Refresh in Webpack](#fast-refresh-in-webpack)
 3. [HTTP Calls](#http-calls)
+   1. [Styling the List](#styling-the-list)
+   2. [Using the useEffect](#using-the-useeffect)
+   3. [Listing the repositories](#listing-the-repositories)
 4. [Using Typescript](#using-typescript)
 5. [Challenges](#challenges)
 
@@ -800,6 +803,95 @@ module.exports = {
 **[⬆ back to top](#table-of-contents)**
 
 ## HTTP Calls
+
+### Styling the Lsit
+
+Create a `repositories.scss` file:
+
+**./src/styles/repositories.scss**
+
+```scss
+section.repository-list {
+  margin: 40px;
+
+  h1 {
+    margin-bottom: 16px;
+  }
+
+  ul {
+    list-style: none;
+
+    li {
+      & + li {
+        margin-top: 20px;
+      }
+
+      p {
+        font-size: 14px;
+        color: #444;
+        margin-top: 8px;
+      }
+
+      a {
+        display: inline-block;
+        margin-top: 16px;
+        text-decoration: none;
+        color: #8257e6;
+      }
+    }
+  }
+}
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+### Using the useEffect
+
+The Effect Hook lets you perform side effects in function components. Data fetching, setting up a subscription, and manually changing the DOM in React components are all examples of side effects. By using this Hook, you tell React that your component needs to do something after render. React will remember the function you passed (we’ll refer to it as our “effect”), and call it later after performing the DOM updates.
+
+By default, it runs both after the first render and after every update. So, if we want to run just once we can use [] as an argument for the second parameter. The same applies if we want to render something every time a variable changes, then we can use [variable].
+
+In `RepositoryList`, let's add the `useEffect` right after the state decoration:
+
+**./src/components/RepositoryList.tsx**
+
+```js
+useEffect(() => {
+    fetch("https://api.github.com/orgs/rocketseat/repos")
+      .then((response) => response.json())
+      .then((data) => setRepositories(data));
+  }, []);
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+### Listing the repositories
+
+Let's change the `RepositoryList` to use a map returning the items. Final code should look like this:
+
+```js
+export function RepositoryList() {
+  const [repositories, setRepositories] = useState([]);
+
+  useEffect(() => {
+    fetch("https://api.github.com/orgs/rocketseat/repos")
+      .then((response) => response.json())
+      .then((data) => setRepositories(data));
+  }, []);
+
+  return (
+    <section className="repository-list">
+      <h1>Repositories List</h1>
+
+      <ul>
+        {repositories.map((repository) => (
+          <RepositoryItem key={repository.name} repository={repository} />
+        ))}
+      </ul>
+    </section>
+  );
+}
+```
 
 **[⬆ back to top](#table-of-contents)**
 

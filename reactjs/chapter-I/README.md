@@ -27,6 +27,9 @@ This chapter focus on the React fundamentals. It covers important concepts like 
    2. [Using the useEffect](#using-the-useeffect)
    3. [Listing the repositories](#listing-the-repositories)
 4. [Using Typescript](#using-typescript)
+   1. [Typescript Fundamentals](#typescript-fundamentals)
+   2. [TypeScript in React](#typescript-in-react)
+   3. [Components with TypeScript](#components-with-typescript)
 5. [Challenges](#challenges)
 
 ## Configuring the Environment
@@ -896,6 +899,182 @@ export function RepositoryList() {
 **[⬆ back to top](#table-of-contents)**
 
 ## Using Typescript
+
+TypeScript is a programming language developed and maintained by Microsoft. It is a strict syntactical superset of JavaScript and adds optional static typing to the language. TypeScript is designed for the development of large applications and transcompiles to JavaScript. As TypeScript is a superset of JavaScript, existing JavaScript programs are also valid TypeScript programs.
+### Typescript Fundamentals
+
+The example below is how a code with Typescript would look like:
+
+```ts
+type User = {
+  name: string
+  email: string
+  address: {
+    city: string
+    state?: string
+  }
+}
+
+function showWelcomeMessage(user: User) {
+  return `Welcome ${user.name}, your e-mail is ${user.email}. Your city is ${user.address.city}` 
+}
+```
+
+> Note that the code above is just an example. No need to create it in our application.
+
+**[⬆ back to top](#table-of-contents)**
+
+### TypeScript in React
+
+Let's run the following commands to install the Typescript:
+
+```sh
+yarn add -D typescript
+```
+
+next, let's initialize the TS:
+
+```sh
+yarn tsc --init
+```
+
+We'll notice that a `tsconfig.json` file got created. Let's edit by the following properties:
+
+**./tsconfig.json**
+
+```json
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "strict": true,
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src"],
+}
+```
+
+Now, we shoould install a preset for TS and add it to modify the webpack, otherwise webpack will not be able to understand the typescript code. 
+
+```sh
+yarn add -D @babel/preset-typescript
+```
+
+Both Babel and Webpack configuration files should look like this:
+
+**./babel.config.js**
+
+```js
+module.exports = {
+  presets: [
+    '@babel/preset-env',
+    '@babel/preset-typescript',
+    ['@babel/preset-react', {
+      runtime: 'automatic'
+    }]
+  ],
+};
+```
+
+**./webpack.config.js**
+
+```js
+const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+
+const isDevelopment = process.env.NODE_ENV !== 'production'
+
+module.exports = {
+  mode: isDevelopment ? 'development' : 'production',
+  devtool: isDevelopment ? 'eval-source-map' : 'source-map',
+  entry: path.resolve(__dirname, 'src', 'index.tsx'),
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.js'
+  },
+  resolve: {
+    extensions: ['.js', '.jsx', '.ts', '.tsx']
+  },
+  devServer: {
+    contentBase: path.resolve(__dirname, 'public'),
+    hot: true
+  },
+  plugins: [
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+    new HtmlWebpackPlugin({
+        template: path.resolve(__dirname, 'public', 'index.html')
+    })
+  ].filter(Boolean),
+  module: {
+    rules: [
+      {
+        test: /\.(j|t)sx$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            plugins: [
+            isDevelopment && require.resolve('react-refresh/babel')
+            ].filter(Boolean)
+          }
+        }
+      },
+      {
+        test: /\.scss$/,
+        exclude: /node_modules/,
+        use: ['style-loader', 'css-loader', 'sass-loader']
+      },
+    ]
+  }
+}
+```
+
+**[⬆ back to top](#table-of-contents)**
+
+### Components with TypeScript
+
+A good practice when working with Typescript in Components is to create `interface`. An `interface` will type all the properties that the component can receive and that really helps during development. 
+
+Besides `interface`, we also have the `type`. In Typescript, they are basically the same, but usually, people use interfaces when working with Components.
+
+Edit the components to use Typescript syntax.
+
+**./src/components/RepositoryItem.tsx**
+
+```ts
+interface RepositoryItemProps {
+  repository: {
+    name: string;
+    description: string;
+    html_url: string;
+  }
+}
+
+export function RepositoryItem(props: RepositoryItemProps) {
+...
+``` 
+**./src/components/RepositoryList.tsx**
+
+```ts
+type Repository = {
+  name: string
+  description: string
+  html_url: string
+}
+
+export function RepositoryList() {
+  const [repositories, setRepositories] = useState<Repository[]>([]);
+...
+```
 
 **[⬆ back to top](#table-of-contents)**
 
